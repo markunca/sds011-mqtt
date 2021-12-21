@@ -67,16 +67,16 @@ func Start(c Config) {
 			continue
 		}
 
-		fmt.Fprintf(os.Stdout, "%v,%v,%v\n", point.Timestamp.Format(time.RFC3339), point.PM25, point.PM10)
+		point25, err := fmt.Fprintf(os.Stdout, "%v\n", point.PM25)
 
-		pointJSON, err := json.Marshal(point)
+		pointJSON25, err := json.Marshal(point25)
 
 		if err != nil {
 			log.Printf("ERROR: Marshal: %v", err)
 			continue
 		}
 
-		if token := client.Publish(c.Topic, 0, false, pointJSON); token.Wait() && token.Error() != nil {
+		if token := client.Publish(c.Topic, 0, false, pointJSON25); token.Wait() && token.Error() != nil {
 			fmt.Print(token.Error())
 		}
 	}
